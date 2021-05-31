@@ -3,7 +3,11 @@ name = "suc"
 version = "0.1.0"
 authors = ["Alexander Heim <alexanderheimat@gmail.com>"]
 edition = "2018"
-
+license = "Unlicense"
+description = "(Simple) Secure (Filebased) User Credentials"
+repository = "https://github.com/AlexanderHeim/suc"
+keywords = ["credentials", "password", "hash", "login", "file"]
+categories = ["authentication", "web-programming"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]

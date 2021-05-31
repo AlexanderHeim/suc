@@ -1,8 +1,13 @@
-use std::{fs::{File, OpenOptions}, io::{Read, Seek, SeekFrom, Write}, path::{Path, PathBuf}, str};
+//! Simple filebased saving and hashing of user credentials
+//! 
+//! Provides one struct: SucFile
 
+use std::{fs::{File, OpenOptions}, io::{Read, Seek, SeekFrom, Write}, path::{Path, PathBuf}, str};
 use argon2::{Argon2, PasswordHash, PasswordHasher, PasswordVerifier, password_hash::SaltString};
 use rand::rngs::OsRng;
 
+
+/// A SucFile. Represents the actual file.
 pub struct SucFile {
     file: File,
     buf: Vec<u8>,
@@ -10,6 +15,7 @@ pub struct SucFile {
 }
 
 impl SucFile {
+    /// Opens an actual file as a sucfile. If the file at the given path does not exist, the file is created and then opened.
     pub fn open<P: AsRef<Path>>(path: P) -> std::io::Result<Self> {
         let path = path.as_ref();
         let file = OpenOptions::new()
@@ -36,6 +42,9 @@ impl SucFile {
         buf
     }
 
+    /// Add key and hash of value to the file (key would be username, value would be password)
+    ///
+    /// Returns Ok(()) if successful
     pub fn add(&mut self, key: &str, value: &str) -> std::io::Result<()> {
         if key.len() > 255 || value.len() > 255 {
             return Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, "Key and value length have to be less than 256 bytes each!"));
@@ -50,6 +59,9 @@ impl SucFile {
         Ok(())
     }
 
+    /// Compares key and hash of value to saved key and saved hash of value.
+    ///
+    /// Returns Ok(true) if value is correct and Ok(false) if value is incorrect.
     pub fn check(&mut self, key: &str, value: &str) -> std::io::Result<bool> {
         if key.len() > 255 || value.len() > 255 {
             return Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, "Key and value length have to be less than 256 bytes each!"));
@@ -71,6 +83,9 @@ impl SucFile {
         Ok(result)
     }
 
+    /// Removes a saved key and it's corresponding hashed value from the file.
+    ///
+    /// Returns Ok(()) if delete was successful.
     pub fn remove(&mut self, key: &str) -> std::io::Result<()> {
         if key.len() > 255 {
             return Err(std::io::Error::new(std::io::ErrorKind::InvalidInput, "Key length has to be less than 256 bytes!"));
