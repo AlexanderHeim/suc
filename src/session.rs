@@ -1,12 +1,10 @@
-use std::{sync::Arc, time::{Duration, Instant}};
+use std::{time::{Duration, Instant}};
 
-use rand::{Rng, distributions::Alphanumeric,  rngs::OsRng};
-
+use rand::{Rng, distributions::Alphanumeric, rngs::OsRng};
 
 pub struct SessionPool {
     sessions: Vec<Session>,
     duration: Duration,
-    rng: Arc<OsRng>,
 }
 
 impl SessionPool {
@@ -14,12 +12,11 @@ impl SessionPool {
         SessionPool {
             sessions: Vec::new(),
             duration,
-            rng: Arc::new(OsRng::default()),
         }
     }
 
     pub fn generate(&mut self) -> String {
-        let s: String = (&mut self.rng)
+        let s: String = OsRng
             .sample_iter(&Alphanumeric)
             .take(48)
             .map(char::from)
