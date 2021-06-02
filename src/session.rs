@@ -1,12 +1,12 @@
 use std::time::{Duration, Instant};
 
-use rand::{Rng, distributions::Alphanumeric, prelude::ThreadRng};
+use rand::{Rng, distributions::Alphanumeric,  rngs::OsRng};
 
 
 pub struct SessionPool {
     sessions: Vec<Session>,
     duration: Duration,
-    rng: ThreadRng,
+    rng: OsRng,
 }
 
 impl SessionPool {
@@ -14,7 +14,7 @@ impl SessionPool {
         SessionPool {
             sessions: Vec::new(),
             duration,
-            rng: ThreadRng::default(),
+            rng: OsRng::default(),
         }
     }
 
@@ -87,6 +87,6 @@ mod tests {
         assert!(session_pool.check(&session_token));
         std::thread::sleep(Duration::from_secs(2));
         assert!(!session_pool.check(&session_token));
-        assert!(session_pool.sessions.is_empty());
+        assert!(session_pool.sessions.is_empty()); 
     }
 }
