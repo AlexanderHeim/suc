@@ -1,4 +1,4 @@
-use std::time::{Duration, Instant};
+use std::{sync::Arc, time::{Duration, Instant}};
 
 use rand::{Rng, distributions::Alphanumeric,  rngs::OsRng};
 
@@ -6,7 +6,7 @@ use rand::{Rng, distributions::Alphanumeric,  rngs::OsRng};
 pub struct SessionPool {
     sessions: Vec<Session>,
     duration: Duration,
-    rng: OsRng,
+    rng: Arc<OsRng>,
 }
 
 impl SessionPool {
@@ -14,7 +14,7 @@ impl SessionPool {
         SessionPool {
             sessions: Vec::new(),
             duration,
-            rng: OsRng::default(),
+            rng: Arc::new(OsRng::default()),
         }
     }
 
