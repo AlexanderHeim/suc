@@ -7,6 +7,8 @@ use argon2::{Argon2, PasswordHash, PasswordHasher, PasswordVerifier, password_ha
 use rand::rngs::OsRng;
 
 
+pub mod session;
+
 /// A SucFile. Represents the actual file.
 pub struct SucFile {
     file: File,
